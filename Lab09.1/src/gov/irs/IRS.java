@@ -18,15 +18,25 @@ public class IRS {
     private TaxPayer[] payers = new TaxPayer[100];
     private int currentIndex = 0;  // for dealing with the array
 
-    public void collectTaxes() {
-        for (int i = 0; i < currentIndex; i++) {
-            payers[i].payTaxes();
-        }
-    }
+
     
     // helper method to add a TaxPayer to the array
     // what types of objects can be passed to this method?
     public void register(TaxPayer payer) {
         payers[currentIndex++] = payer;
+    }
+
+    public void collectTaxes(){
+        for (int i = 0; i < currentIndex; i++){
+            //added in 9.2
+            double deduction = payers[i].getStandardDeduction();
+            System.out.println("Tax payer's deduction is: " + deduction);
+
+            // In-class work with fileReturn()
+//            payers[i].fileReturn();
+            payers[i].payTaxes();
+
+            System.out.println();
+        }
     }
 }
