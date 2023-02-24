@@ -25,7 +25,12 @@ public class Car extends Vehicle {
         System.out.println("Car stopped");
     }
 
-    public void moveTo(String location) {
+    public void moveTo(String location) throws DestinationUnreachableException {
+        if(location.equals("West Seattle")){
+            throw new DestinationUnreachableException(DestinationUnreachableException.ANSI_YELLOW +
+                    "Unable to get to destination West Seattle due to bridge stupidity."
+                    + DestinationUnreachableException.ANSI_RESET);
+        }
         System.out.println(getMake() + " " + getModel() + " moving to " + location);
     }
 
