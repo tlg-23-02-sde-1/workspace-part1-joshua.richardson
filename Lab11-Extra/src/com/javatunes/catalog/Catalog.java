@@ -43,4 +43,5 @@ public interface Catalog {
      * See java.util.Collections class (an all-static utility class) for help here.
      */
     public Collection<MusicItem> getAll();
+
 }

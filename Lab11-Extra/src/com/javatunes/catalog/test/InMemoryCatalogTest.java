@@ -8,6 +8,11 @@
 
 package com.javatunes.catalog.test;
 
+import com.javatunes.catalog.Catalog;
+import com.javatunes.catalog.InMemoryCatalog;
+import com.javatunes.catalog.MusicCategory;
+import com.javatunes.catalog.MusicItem;
+
 class InMemoryCatalogTest {
 
     /*
@@ -17,21 +22,39 @@ class InMemoryCatalogTest {
      * Once you see that the test method verifies the corresponding business method
      * works correctly, you can comment out that call in main() and proceed to the next one.
      */
+
     public static void main(String[] args) {
-        // testFindById();
+        testFindById();
         // testFindByKeyword();
         // testFindByCategory();
         // testSize();
         // testGetAll();
+        testFindSelfTitled();
     }
 
+    private static void testFindSelfTitled() {
+        String shouldWork = "Madonna";
+
+
+    }
+
+
     private static void testFindById() {
+        Catalog catalog = new InMemoryCatalog();
+
+        MusicItem item = catalog.findById(12L);
+        System.out.println(item);
     }
 
     private static void testFindByKeyword() {
+
     }
 
     private static void testFindByCategory() {
+        InMemoryCatalog catalog = new InMemoryCatalog();
+
+        var items = catalog.findByCategory(MusicCategory.POP);
+
     }
 
     private static void testSize() {

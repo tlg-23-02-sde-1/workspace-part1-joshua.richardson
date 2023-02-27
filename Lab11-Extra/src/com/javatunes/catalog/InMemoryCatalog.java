@@ -8,9 +8,15 @@
 
 package com.javatunes.catalog;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Year;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.DoubleStream;
+
+import static com.javatunes.catalog.MusicCategory.ROCK;
 
 // OF COURSE THIS CLASS DOESN'T COMPILE
 // Your first job is to fulfill the contract that this class has signed.
@@ -37,7 +43,41 @@ public class InMemoryCatalog implements Catalog {
         new MusicItem(17L, "1984",                      "Van Halen",                 "1984-08-19", 11.97, MusicCategory.ROCK),
         new MusicItem(18L, "Escape",                    "Journey",                   "1981-02-25", 11.97, MusicCategory.CLASSIC_ROCK))
     );
+    @Override
+    public MusicItem findById(Long id) {
+        for(var item : catalogData){
+            if (item.getId().equals(id)){
+                return item;
+            }
+        }
+        return null;
+    }
 
+    @Override
+    public Collection<MusicItem> findByKeyword(String keyword) {
+        return null;
+    }
+
+    @Override
+    public Collection<MusicItem> findByCategory(MusicCategory category) {
+        Collection<MusicItem> items = new ArrayList<MusicItem>();
+        for(MusicItem item: catalogData) {
+            if(item.getMusicCategory().equals(category)) {
+                items.add(item);
+            }
+        }
+        return items;
+    }
+
+    @Override
+    public int size() {
+        return catalogData.size();
+    }
+
+    @Override
+    public Collection<MusicItem> getAll() {
+        return Collections.unmodifiableCollection(catalogData);
+    }
 
     /**
      * After you've satisfied your contractual obligations above, do these additional tasks.
@@ -65,54 +105,114 @@ public class InMemoryCatalog implements Catalog {
      * TASK: find all MusicItems where title is same as artist.
      * For example, Madonna's first album is simply titled, "Madonna."
      */
-
+    public Collection<MusicItem> findSelfTitled(){
+        Collection<MusicItem> selfTitled = new ArrayList<>();
+        for(var item : catalogData){
+            if (item.getArtist().equalsIgnoreCase(item.getTitle())) selfTitled.add(item);
+        }
+        return selfTitled;
+    }
 
     /**
      * TASK: find all "rock" items whose price is less than or equal to the specified price.
      */
-
+    public Collection<MusicItem> findRockBottom(double maxPrice){
+        Collection<MusicItem> result = new ArrayList<>();
+        for(var item : catalogData){
+            if(item.getMusicCategory().equals(ROCK) && item.getPrice()<=maxPrice){
+                result.add(item);
+            }
+        }
+        return result;
+    }
 
     /**
      * TASK: how many items of the specified genre (MusicCategory) do we sell?
      */
+    public int countByGenre(MusicCategory category){
+        int result = 0;
+//        TODO
+
+        return result;
+    }
 
 
     /**
      * TASK: determine average price of our low-cost, extensive catalog of music.
      */
-
+    public double averageCost(){
+        return catalogData
+                .stream().
+                mapToDouble(MusicItem::getPrice).
+                sum() / catalogData.size();
+    }
 
     /**
      * TASK: find the cheapest item with the specified genre (MusicCategory).
      */
+    public MusicItem cheapestByGenre(MusicCategory category){
+        return findByCategory(category)
+                .stream()
+                .min(Comparator.comparingDouble(MusicItem::getPrice))
+                .orElseThrow(NoSuchElementException::new);
+    }
 
 
     /**
      * TASK: find the average price of items in the specified genre (MusicCategory).
      */
+    public double findGenreAverage(MusicCategory category){
+        return  findByCategory(category)
+                .stream()
+                .mapToDouble(MusicItem::getPrice)
+                .average()
+                .getAsDouble();
+    }
 
 
     /**
-     * TASK: are all items priced at least $10?
+     * TASK: are all items priced at least $10?  Don't hard code
      * This is a yes/no answer.
      */
+    public boolean isAtLeastCost(double minPrice){
+        return catalogData.stream()
+                .noneMatch(a -> a.getPrice() <= minPrice);
+    }
 
 
     /**
      * TASK: do we sell any items with the specified genre (MusicCategory)?
      * Another yes/no answer.
      */
+    public boolean sellGenre(MusicCategory category){
+        return catalogData.stream()
+                .noneMatch(a -> a.getMusicCategory().equals(category));
+    }
 
 
     /**
      * TASK: find the titles of all "pop" items, sorted by natural order.
      * Just the titles!
      */
+    public String findTitleToGenre(MusicCategory category){
+        StringBuilder result = new StringBuilder();
+         findByCategory(category).stream()
+                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(MusicItem::getTitle))))
+                .forEach(a -> result.append(a.getTitle()).append("\n"));
+         return result.toString();
+    }
 
 
     /**
      * TASK: find all items released in the 80s whose price is less than or equal to the specified price.
      */
+    public List<MusicItem> cheap80s(double maxPrice){
+        return catalogData.stream()
+                .filter(a -> a.getPrice()<=maxPrice
+                    && 1980 >= a.getReleaseDate().getYear()
+                    && a.getReleaseDate().getYear() > 1990)
+                .collect(Collectors.toList());
+    }
 
 
     /**
@@ -130,4 +230,6 @@ public class InMemoryCatalog implements Catalog {
         }
         return builder.toString();
     }
+
+
 }
