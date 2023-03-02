@@ -1,9 +1,8 @@
 package com.entertainment;
 
 import java.util.Objects;
-import java.util.Optional;
 
-public class Television {
+public class Television implements Comparable<Television>{
     private String brand;
     private int volume;
 
@@ -59,17 +58,41 @@ public class Television {
 //        return (Objects.equals(getBrand(),obj.getBrand())) && (getVolume() == obj.getVolume());
 //    }
 
+//    @Override
+//    public int hashCode(){
+//        return Objects.hash(getBrand(), getVolume());
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj){ // Need to write hash code as well to make sure!!!
+//        if(obj instanceof Television){
+//            var other = (Television) obj;
+//
+//            return Objects.equals(getBrand(), other.getBrand()) && (getVolume() == other.getVolume());
+//        }
+//        return false;
+//    }
+
+
     @Override
-    public int hashCode(){
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Television that = (Television) o;
+        return getVolume() == that.getVolume() && Objects.equals(getBrand(), that.getBrand());
+    }
+
+    @Override
+    public int hashCode() {
         return Objects.hash(getBrand(), getVolume());
     }
 
     @Override
-    public boolean equals(Object obj){
-        if(obj instanceof Television){
-            var other = (Television) obj;
-            return Objects.equals(getBrand(), other.getBrand()) && (getVolume() == other.getVolume());
+    public int compareTo(Television that) {
+        int result =  this.getBrand().compareTo(that.getBrand());
+        if (result == 0) {
+            result = Integer.compare(this.getVolume(), that.getVolume());
         }
-        return false;
+        return result;
     }
 }

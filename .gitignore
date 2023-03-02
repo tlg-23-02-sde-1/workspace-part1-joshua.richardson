@@ -1,6 +1,6 @@
 # IntelliJ metadata files
 
-.idea/*
+.idea/vcs.xml
 !.idea/artifacts/
 !.idea/libraries/
 !.idea/modules.xml
